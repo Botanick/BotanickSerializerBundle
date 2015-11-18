@@ -1,0 +1,9 @@
+parameters:
+    botanick.serializer.service.class: Botanick\SerializerBundle\Serializer\Serializer
+
+services:
+    botanick.serializer.service:
+        class: %botanick.serializer.service.class%
+
+    botanick.serializer:
+        alias: botanick.serializer.service
