@@ -4,6 +4,7 @@ namespace Botanick\SerializerBundle\Serializer;
 
 use Botanick\SerializerBundle\Exception\SerializerNotFoundException;
 use Botanick\SerializerBundle\Serializer\DataSerializer\DataSerializerInterface;
+use Botanick\SerializerBundle\SerializerAwareInterface;
 use Botanick\SerializerBundle\SerializerInterface;
 
 class Serializer implements SerializerInterface
@@ -35,6 +36,10 @@ class Serializer implements SerializerInterface
 
     public function addDataSerializer(DataSerializerInterface $dataSerializer, $priority)
     {
+        if ($dataSerializer instanceof SerializerAwareInterface) {
+            $dataSerializer->setSerializer($this);
+        }
+
         $this->_dataSerializers[$priority][] = $dataSerializer;
         $this->_dataSerializersNeedSort = true;
     }

@@ -3,6 +3,7 @@ parameters:
     botanick.serializer.data_serializer.scalar.class: Botanick\SerializerBundle\Serializer\DataSerializer\ScalarSerializer
     botanick.serializer.data_serializer.resource.class: Botanick\SerializerBundle\Serializer\DataSerializer\ResourceSerializer
     botanick.serializer.data_serializer.null.class: Botanick\SerializerBundle\Serializer\DataSerializer\NullSerializer
+    botanick.serializer.data_serializer.array.class: Botanick\SerializerBundle\Serializer\DataSerializer\ArraySerializer
 
 services:
     botanick.serializer.service:
@@ -25,6 +26,12 @@ services:
 
     botanick.serializer.data_serializer.null:
         class: %botanick.serializer.data_serializer.null.class%
+        public: false
+        tags:
+            - { name: botanick.serializer.data_serializer, priority: -100 }
+
+    botanick.serializer.data_serializer.array:
+        class: %botanick.serializer.data_serializer.array.class%
         public: false
         tags:
             - { name: botanick.serializer.data_serializer, priority: -100 }
