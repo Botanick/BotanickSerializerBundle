@@ -34,12 +34,16 @@ class ObjectSerializer extends DataSerializer
      * @param \stdClass $data
      * @param string $group
      * @param mixed $options
-     * @return array
+     * @return mixed
      * @throws DataSerializerException
      */
     public function serialize($data, $group = self::GROUP_DEFAULT, $options = null)
     {
         $config = $this->getConfig($data, $group);
+
+        if ($config === false) {
+            return null;
+        }
 
         $result = [];
 
