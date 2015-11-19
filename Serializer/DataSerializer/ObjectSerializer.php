@@ -33,10 +33,10 @@ class ObjectSerializer extends DataSerializer
     }
 
     /**
-     * @param \stdClass $data
+     * @param object $data
      * @param string $group
      * @param mixed $options
-     * @return mixed
+     * @return array|null
      * @throws DataSerializerException
      */
     public function serialize($data, $group = self::GROUP_DEFAULT, $options = null)
@@ -78,7 +78,7 @@ class ObjectSerializer extends DataSerializer
     }
 
     /**
-     * @param \stdClass $data
+     * @param object $data
      * @param string $group
      * @param array $visitedGroups To determine cycles
      * @return mixed
