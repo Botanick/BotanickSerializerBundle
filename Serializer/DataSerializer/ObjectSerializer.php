@@ -9,6 +9,8 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class ObjectSerializer extends DataSerializer
 {
+    const PROP_EXTENDS = '$extends$';
+
     /**
      * @var SerializerConfigLoader
      */
@@ -52,6 +54,10 @@ class ObjectSerializer extends DataSerializer
             ->getPropertyAccessor();
 
         foreach ($config as $prop => $propOptions) {
+            if ($propOptions === false) {
+                continue;
+            }
+
             try {
                 $value = $propertyAccessor->getValue($data, $prop);
             } catch (\Exception $ex) {
@@ -82,7 +88,7 @@ class ObjectSerializer extends DataSerializer
         $className = get_class($data);
 
         try {
-            $config = $this->getConfigLoader()->getConfigFor($className);
+            $configGroups = $this->getConfigLoader()->getConfigFor($className);
         } catch (ConfigNotFoundException $ex) {
             throw new DataSerializerException(
                 sprintf(
@@ -93,20 +99,29 @@ class ObjectSerializer extends DataSerializer
             );
         }
 
-        if (isset($config[$group])) {
-            return $config[$group];
-        } elseif (isset($config[self::GROUP_DEFAULT])) {
-            return $config[self::GROUP_DEFAULT];
+        if (isset($configGroups[$group])) {
+            $config = $configGroups[$group];
+        } elseif (isset($configGroups[self::GROUP_DEFAULT])) {
+            $config = $configGroups[self::GROUP_DEFAULT];
+        } else {
+            throw new DataSerializerException(
+                sprintf(
+                    'Cannot serialize class "%s". Neither "%s" nor "%s" group was found.',
+                    $className,
+                    $group,
+                    self::GROUP_DEFAULT
+                )
+            );
         }
 
-        throw new DataSerializerException(
-            sprintf(
-                'Cannot serialize class "%s". Neither "%s" nor "%s" group was found.',
-                $className,
-                $group,
-                self::GROUP_DEFAULT
-            )
-        );
+        if (isset($config[self::PROP_EXTENDS])) {
+            $extendedGroup = $config[self::PROP_EXTENDS];
+            unset($config[self::PROP_EXTENDS]);
+
+            $config = array_merge($this->getConfig($data, $extendedGroup), $config);
+        }
+
+        return $config;
     }
 
     public function supports($data)
