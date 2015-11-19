@@ -5,6 +5,7 @@ namespace Botanick\SerializerBundle\Serializer\DataSerializer;
 use Botanick\SerializerBundle\Exception\ConfigNotFoundException;
 use Botanick\SerializerBundle\Exception\DataSerializerException;
 use Botanick\SerializerBundle\Serializer\Config\SerializerConfigLoader;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class ObjectSerializer extends DataSerializer
 {
@@ -40,7 +41,30 @@ class ObjectSerializer extends DataSerializer
     {
         $config = $this->getConfig($data, $group);
 
-        return ['a' => 1];
+        $result = [];
+
+        $propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
+            ->enableMagicCall()
+            ->getPropertyAccessor();
+
+        foreach ($config as $prop => $propOptions) {
+            try {
+                $value = $propertyAccessor->getValue($data, $prop);
+            } catch (\Exception $ex) {
+                throw new DataSerializerException(
+                    sprintf(
+                        'Cannot access "%s" property in class "%s". %s',
+                        $prop,
+                        get_class($data),
+                        $ex->getMessage()
+                    )
+                );
+            }
+
+            $result[$prop] = $this->getSerializer()->serialize($value, $group, $propOptions);
+        }
+
+        return $result;
     }
 
     /**
@@ -58,7 +82,7 @@ class ObjectSerializer extends DataSerializer
         } catch (ConfigNotFoundException $ex) {
             throw new DataSerializerException(
                 sprintf(
-                    'Cannot serialize an object of class "%s", reason: %s',
+                    'Cannot serialize class "%s". %s',
                     $className,
                     $ex->getMessage()
                 )
@@ -73,7 +97,7 @@ class ObjectSerializer extends DataSerializer
 
         throw new DataSerializerException(
             sprintf(
-                'Cannot serialize an object of class "%s", neither "%s" nor "%s" group was found',
+                'Cannot serialize class "%s". Neither "%s" nor "%s" group was found.',
                 $className,
                 $group,
                 self::GROUP_DEFAULT

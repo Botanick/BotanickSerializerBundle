@@ -64,7 +64,7 @@ class SerializerConfigLoader
         }
 
         if (!array_key_exists($name, $this->_config)) {
-            throw new ConfigNotFoundException(sprintf('Config for "%s" not found', $name));
+            throw new ConfigNotFoundException(sprintf('Config for "%s" not found.', $name));
         }
 
         return $this->_config[$name];
@@ -80,7 +80,7 @@ class SerializerConfigLoader
             try {
                 $dir = $this->getAppKernel()->locateResource($bundle . '/Resources/config/botanick-serializer/');
             } catch (\Exception $ex) {
-                throw new ConfigLoadException(sprintf('Unable to find "botanick-serializer" directory in %s bundle', $bundle));
+                throw new ConfigLoadException(sprintf('Unable to find "botanick-serializer" directory in %s bundle.', $bundle));
             }
 
             $finder->files()->in($dir);
@@ -92,7 +92,7 @@ class SerializerConfigLoader
                 } catch (ParseException $ex) {
                     throw new ConfigLoadException(
                         sprintf(
-                            'Unable to load config from "%s" (%s bundle): %s',
+                            'Unable to load config from "%s" (%s bundle). %s',
                             $filePath,
                             $bundle,
                             $ex->getMessage()
