@@ -5,6 +5,7 @@ parameters:
     botanick.serializer.data_serializer.null.class: Botanick\SerializerBundle\Serializer\DataSerializer\NullSerializer
     botanick.serializer.data_serializer.array.class: Botanick\SerializerBundle\Serializer\DataSerializer\ArraySerializer
     botanick.serializer.data_serializer.traversable.class: Botanick\SerializerBundle\Serializer\DataSerializer\TraversableSerializer
+    botanick.serializer.data_serializer.datetime.class: Botanick\SerializerBundle\Serializer\DataSerializer\DateTimeSerializer
 
 services:
     botanick.serializer.service:
@@ -39,6 +40,12 @@ services:
 
     botanick.serializer.data_serializer.traversable:
         class: %botanick.serializer.data_serializer.traversable.class%
+        public: false
+        tags:
+            - { name: botanick.serializer.data_serializer, priority: -90 }
+
+    botanick.serializer.data_serializer.datetime:
+        class: %botanick.serializer.data_serializer.datetime.class%
         public: false
         tags:
             - { name: botanick.serializer.data_serializer, priority: -90 }
