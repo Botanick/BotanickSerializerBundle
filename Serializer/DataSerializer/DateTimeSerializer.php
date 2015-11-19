@@ -12,15 +12,24 @@ class DateTimeSerializer extends DataSerializer
      */
     public function serialize($data, $group = self::GROUP_DEFAULT, $options = null)
     {
-        if (!is_array($options) || !isset($options['format'])) {
-            return $data->getTimestamp();
+        $options = $this->mergeOptions($options);
+
+        if (is_string($options['format'])) {
+            return $data->format($options['format']);
         }
 
-        return $data->format($options['format']);
+        return $data->getTimestamp();
     }
 
     public function supports($data)
     {
         return $data instanceof \DateTime;
+    }
+
+    protected function getDefaultOptions()
+    {
+        return [
+            'format' => false
+        ];
     }
 }

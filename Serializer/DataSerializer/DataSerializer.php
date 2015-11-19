@@ -22,8 +22,32 @@ abstract class DataSerializer implements DataSerializerInterface, SerializerAwar
         $this->_serializer = $serializer;
     }
 
+    /**
+     * @return SerializerInterface
+     */
     protected function getSerializer()
     {
         return $this->_serializer;
+    }
+
+    /**
+     * @param mixed $options
+     * @return array
+     */
+    protected function mergeOptions($options)
+    {
+        if (!is_array($options)) {
+            return $this->getDefaultOptions();
+        }
+
+        return array_merge($this->getDefaultOptions(), $options);
+    }
+
+    /**
+     * @return array
+     */
+    protected function getDefaultOptions()
+    {
+        return [];
     }
 }
