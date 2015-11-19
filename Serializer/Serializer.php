@@ -18,15 +18,12 @@ class Serializer implements SerializerInterface
      */
     protected $_dataSerializersNeedSort = false;
 
-    public function serialize($data, $group = self::GROUP_DEFAULT)
+    public function serialize($data, $group = self::GROUP_DEFAULT, $options = null)
     {
-        // todo do smth with $config
-        $config = null;
-
         foreach ($this->getDataSerializers() as $dataSerializers) {
             foreach ($dataSerializers as $dataSerializer) {
                 if ($dataSerializer->supports($data)) {
-                    return $dataSerializer->serialize($data, $group, $config);
+                    return $dataSerializer->serialize($data, $group, $options);
                 }
             }
         }

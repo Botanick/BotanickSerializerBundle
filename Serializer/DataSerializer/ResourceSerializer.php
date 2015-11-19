@@ -4,7 +4,7 @@ namespace Botanick\SerializerBundle\Serializer\DataSerializer;
 
 class ResourceSerializer extends DataSerializer
 {
-    public function serialize($data, $group = self::GROUP_DEFAULT, $config = null)
+    public function serialize($data, $group = self::GROUP_DEFAULT, $options = null)
     {
         return (string)$data;
     }

@@ -12,9 +12,10 @@ interface SerializerInterface
     /**
      * @param mixed $data
      * @param string $group
+     * @param mixed $options
      * @return mixed
      * @throws SerializerNotFoundException
      * @throws DataSerializerException
      */
-    public function serialize($data, $group = self::GROUP_DEFAULT);
+    public function serialize($data, $group = self::GROUP_DEFAULT, $options = null);
 }
