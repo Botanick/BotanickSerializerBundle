@@ -80,10 +80,11 @@ class ObjectSerializer extends DataSerializer
     /**
      * @param \stdClass $data
      * @param string $group
+     * @param array $visitedGroups To determine cycles
      * @return mixed
      * @throws DataSerializerException
      */
-    protected function getConfig($data, $group)
+    protected function getConfig($data, $group, array $visitedGroups = [])
     {
         $className = get_class($data);
 
@@ -100,9 +101,9 @@ class ObjectSerializer extends DataSerializer
         }
 
         if (isset($configGroups[$group])) {
-            $config = $configGroups[$group];
+
         } elseif (isset($configGroups[self::GROUP_DEFAULT])) {
-            $config = $configGroups[self::GROUP_DEFAULT];
+            $group = self::GROUP_DEFAULT;
         } else {
             throw new DataSerializerException(
                 sprintf(
@@ -113,12 +114,26 @@ class ObjectSerializer extends DataSerializer
                 )
             );
         }
+        $config = $configGroups[$group];
+        $visitedGroups[] = $group;
 
         if (isset($config[self::PROP_EXTENDS])) {
             $extendedGroup = $config[self::PROP_EXTENDS];
+
+            if (in_array($extendedGroup, $visitedGroups, true)) {
+                throw new DataSerializerException(
+                    sprintf(
+                        'Cannot serialize class "%s". Cyclic groups extension found for group "%s", path: %s.',
+                        $className,
+                        $extendedGroup,
+                        implode(' -> ', $visitedGroups)
+                    )
+                );
+            }
+
             unset($config[self::PROP_EXTENDS]);
 
-            $config = array_merge($this->getConfig($data, $extendedGroup), $config);
+            $config = array_merge($this->getConfig($data, $extendedGroup, $visitedGroups), $config);
         }
 
         return $config;
