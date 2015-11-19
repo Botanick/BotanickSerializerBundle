@@ -63,7 +63,7 @@ class SerializerConfigLoader
             $this->loadConfig();
         }
 
-        if (!isset($this->_config[$name])) {
+        if (!array_key_exists($name, $this->_config)) {
             throw new ConfigNotFoundException(sprintf('Config for "%s" not found', $name));
         }
 
