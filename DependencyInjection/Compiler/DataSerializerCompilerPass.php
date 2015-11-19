@@ -19,14 +19,18 @@ class DataSerializerCompilerPass implements CompilerPassInterface
 
         $definition = $container->getDefinition(static::SERIALIZER_SERVICE_NAME);
 
-        foreach ($container->findTaggedServiceIds(static::TAG_NAME) as $id => $attributes) {
-            $definition->addMethodCall(
-                'addDataSerializer',
-                array(
-                    new Reference($id),
-                    isset($attributes['priority']) ? $attributes['priority'] : 0
-                )
-            );
+        foreach ($container->findTaggedServiceIds(static::TAG_NAME) as $id => $tags) {
+            foreach ($tags as $tag) {
+                $priority = isset($tag['priority']) ? $tag['priority'] : 0;
+
+                $definition->addMethodCall(
+                    'addDataSerializer',
+                    array(
+                        new Reference($id),
+                        $priority
+                    )
+                );
+            }
         }
     }
 }
