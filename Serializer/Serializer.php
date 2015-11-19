@@ -4,10 +4,11 @@ namespace Botanick\SerializerBundle\Serializer;
 
 use Botanick\SerializerBundle\Exception\SerializerNotFoundException;
 use Botanick\SerializerBundle\Serializer\DataSerializer\DataSerializerInterface;
+use Botanick\SerializerBundle\Serializer\DataSerializer\DataSerializersAwareInterface;
 use Botanick\SerializerBundle\SerializerAwareInterface;
 use Botanick\SerializerBundle\SerializerInterface;
 
-class Serializer implements SerializerInterface
+class Serializer implements SerializerInterface, DataSerializersAwareInterface
 {
     /**
      * @var DataSerializerInterface[][]
