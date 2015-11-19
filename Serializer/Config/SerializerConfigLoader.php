@@ -2,7 +2,11 @@
 
 namespace Botanick\SerializerBundle\Serializer\Config;
 
+use Botanick\SerializerBundle\Exception\ConfigLoadException;
 use Botanick\SerializerBundle\Exception\ConfigNotFoundException;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Yaml;
 
 class SerializerConfigLoader
 {
@@ -41,6 +45,14 @@ class SerializerConfigLoader
     }
 
     /**
+     * @return array
+     */
+    protected function getBundles()
+    {
+        return $this->_bundles;
+    }
+
+    /**
      * @param string $name
      * @return mixed
      * @throws ConfigNotFoundException
@@ -61,5 +73,35 @@ class SerializerConfigLoader
     protected function loadConfig()
     {
         $this->_config = [];
+
+        $finder = new Finder();
+
+        foreach ($this->getBundles() as $bundle) {
+            try {
+                $dir = $this->getAppKernel()->locateResource($bundle . '/Resources/config/botanick-serializer/');
+            } catch (\Exception $ex) {
+                throw new ConfigLoadException(sprintf('Unable to find "botanick-serializer" directory in %s bundle', $bundle));
+            }
+
+            $finder->files()->in($dir);
+            foreach ($finder as $file) {
+                $filePath = realpath($file);
+
+                try {
+                    $config = Yaml::parse(file_get_contents($filePath));
+                } catch (ParseException $ex) {
+                    throw new ConfigLoadException(
+                        sprintf(
+                            'Unable to load config from "%s" (%s bundle): %s',
+                            $filePath,
+                            $bundle,
+                            $ex->getMessage()
+                        )
+                    );
+                }
+
+                $this->_config = array_merge($this->_config, $config);
+            }
+        }
     }
 }
