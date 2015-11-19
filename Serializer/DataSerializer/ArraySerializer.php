@@ -4,6 +4,12 @@ namespace Botanick\SerializerBundle\Serializer\DataSerializer;
 
 class ArraySerializer extends DataSerializer
 {
+    /**
+     * @param array $data
+     * @param string $group
+     * @param mixed $options
+     * @return array
+     */
     public function serialize($data, $group = self::GROUP_DEFAULT, $options = null)
     {
         $result = [];

@@ -4,9 +4,15 @@ namespace Botanick\SerializerBundle\Serializer\DataSerializer;
 
 class NullSerializer extends DataSerializer
 {
+    /**
+     * @param null $data
+     * @param string $group
+     * @param mixed $options
+     * @return null
+     */
     public function serialize($data, $group = self::GROUP_DEFAULT, $options = null)
     {
-        return $data;
+        return null;
     }
 
     public function supports($data)
