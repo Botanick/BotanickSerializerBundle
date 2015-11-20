@@ -10,6 +10,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 class ObjectSerializer extends DataSerializer
 {
     const PROP_EXTENDS = '$extends$';
+    const PROP_GETTER = '$getter$';
 
     /**
      * @var SerializerConfigLoader
@@ -58,8 +59,16 @@ class ObjectSerializer extends DataSerializer
                 continue;
             }
 
+            $getter = $prop;
+            if (is_array($propOptions)) {
+                if (isset($propOptions[self::PROP_GETTER])) {
+                    $getter = $propOptions[self::PROP_GETTER];
+                    unset($propOptions[self::PROP_GETTER]);
+                }
+            }
+
             try {
-                $value = $propertyAccessor->getValue($data, $prop);
+                $value = $propertyAccessor->getValue($data, $getter);
             } catch (\Exception $ex) {
                 throw new DataSerializerException(
                     sprintf(
