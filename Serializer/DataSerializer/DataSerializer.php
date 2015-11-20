@@ -11,10 +11,14 @@ abstract class DataSerializer implements DataSerializerInterface, SerializerAwar
      * @var SerializerInterface
      */
     private $_serializer;
+    /**
+     * @var array
+     */
+    private $_defaultOptions = [];
 
     public function __construct()
     {
-
+        $this->setDefaultOptions($this->getBaseDefaultOptions());
     }
 
     public function setSerializer(SerializerInterface $serializer)
@@ -31,6 +35,30 @@ abstract class DataSerializer implements DataSerializerInterface, SerializerAwar
     }
 
     /**
+     * @param array $options
+     */
+    public function setDefaultOptions(array $options)
+    {
+        $this->_defaultOptions = array_merge($this->_defaultOptions, $options);
+    }
+
+    /**
+     * @return array
+     */
+    protected function getBaseDefaultOptions()
+    {
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    protected function getDefaultOptions()
+    {
+        return $this->_defaultOptions;
+    }
+
+    /**
      * @param mixed $options
      * @return array
      */
@@ -41,13 +69,5 @@ abstract class DataSerializer implements DataSerializerInterface, SerializerAwar
         }
 
         return array_merge($this->getDefaultOptions(), $options);
-    }
-
-    /**
-     * @return array
-     */
-    protected function getDefaultOptions()
-    {
-        return [];
     }
 }

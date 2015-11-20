@@ -13,6 +13,11 @@ class BotanickSerializerExtension extends ConfigurableExtension
     {
         $container->setParameter('botanick.serializer.config.bundles', $mergedConfig['bundles']);
 
+        foreach ($mergedConfig['data_serializers'] as $name => $options) {
+            $container->setParameter(sprintf('botanick.serializer.config.data_serializer.%s.priority', $name), $options['priority']);
+            $container->setParameter(sprintf('botanick.serializer.config.data_serializer.%s.options', $name), $options['options']);
+        }
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
     }

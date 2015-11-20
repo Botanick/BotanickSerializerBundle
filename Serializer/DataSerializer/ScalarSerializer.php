@@ -52,7 +52,7 @@ class ScalarSerializer extends DataSerializer
         return is_scalar($data);
     }
 
-    protected function getDefaultOptions()
+    protected function getBaseDefaultOptions()
     {
         return [
             'type' => false,

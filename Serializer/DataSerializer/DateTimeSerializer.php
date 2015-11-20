@@ -26,7 +26,7 @@ class DateTimeSerializer extends DataSerializer
         return $data instanceof \DateTime;
     }
 
-    protected function getDefaultOptions()
+    protected function getBaseDefaultOptions()
     {
         return [
             'format' => false
