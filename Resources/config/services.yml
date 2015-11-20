@@ -1,6 +1,6 @@
 parameters:
     botanick.serializer.service.class: Botanick\SerializerBundle\Serializer\Serializer
-    botanick.serializer.config_loader.class: Botanick\SerializerBundle\Serializer\Config\SerializerConfigLoader
+    botanick.serializer.config_loader.class: Botanick\SerializerBundle\Serializer\Config\SerializerBundlesConfigLoader
     botanick.serializer.data_serializer.scalar.class: Botanick\SerializerBundle\Serializer\DataSerializer\ScalarSerializer
     botanick.serializer.data_serializer.resource.class: Botanick\SerializerBundle\Serializer\DataSerializer\ResourceSerializer
     botanick.serializer.data_serializer.null.class: Botanick\SerializerBundle\Serializer\DataSerializer\NullSerializer

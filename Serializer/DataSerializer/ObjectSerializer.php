@@ -4,7 +4,7 @@ namespace Botanick\SerializerBundle\Serializer\DataSerializer;
 
 use Botanick\SerializerBundle\Exception\ConfigNotFoundException;
 use Botanick\SerializerBundle\Exception\DataSerializerException;
-use Botanick\SerializerBundle\Serializer\Config\SerializerConfigLoader;
+use Botanick\SerializerBundle\Serializer\Config\SerializerConfigLoaderInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class ObjectSerializer extends DataSerializer
@@ -13,20 +13,20 @@ class ObjectSerializer extends DataSerializer
     const PROP_GETTER = '$getter$';
 
     /**
-     * @var SerializerConfigLoader
+     * @var SerializerConfigLoaderInterface
      */
     private $_configLoader;
 
     /**
-     * @param SerializerConfigLoader $configLoader
+     * @param SerializerConfigLoaderInterface $configLoader
      */
-    public function setConfigLoader(SerializerConfigLoader $configLoader)
+    public function setConfigLoader(SerializerConfigLoaderInterface $configLoader)
     {
         $this->_configLoader = $configLoader;
     }
 
     /**
-     * @return SerializerConfigLoader
+     * @return SerializerConfigLoaderInterface
      */
     protected function getConfigLoader()
     {
