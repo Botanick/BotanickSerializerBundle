@@ -29,7 +29,12 @@ class Serializer implements SerializerInterface, DataSerializersAwareInterface
             }
         }
 
-        throw new SerializerNotFoundException('No serializers found');
+        throw new SerializerNotFoundException(
+            sprintf(
+                'No serializers found for "%s"',
+                is_object($data) ? get_class($data) : gettype($data)
+            )
+        );
     }
 
     public function addDataSerializer(DataSerializerInterface $dataSerializer, $priority)
