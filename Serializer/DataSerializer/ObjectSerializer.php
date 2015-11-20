@@ -109,40 +109,62 @@ class ObjectSerializer extends DataSerializer
             );
         }
 
-        if (isset($configGroups[$group])) {
+        $config = [];
+        while (true) {
+            if (isset($configGroups[$group])) {
 
-        } elseif (isset($configGroups[self::GROUP_DEFAULT])) {
-            $group = self::GROUP_DEFAULT;
-        } else {
-            throw new DataSerializerException(
-                sprintf(
-                    'Cannot serialize class "%s". Neither "%s" nor "%s" group was found.',
-                    $className,
-                    $group,
-                    self::GROUP_DEFAULT
-                )
-            );
-        }
-        $config = $configGroups[$group];
-        $visitedGroups[] = $group;
-
-        if (isset($config[self::PROP_EXTENDS])) {
-            $extendedGroup = $config[self::PROP_EXTENDS];
-
-            if (in_array($extendedGroup, $visitedGroups, true)) {
+            } elseif (isset($configGroups[self::GROUP_DEFAULT])) {
+                $group = self::GROUP_DEFAULT;
+            } else {
                 throw new DataSerializerException(
                     sprintf(
-                        'Cannot serialize class "%s". Cyclic groups extension found for group "%s", path: %s.',
+                        'Cannot serialize class "%s". Neither "%s" nor "%s" group was found.',
                         $className,
-                        $extendedGroup,
-                        implode(' -> ', $visitedGroups)
+                        $group,
+                        self::GROUP_DEFAULT
                     )
                 );
             }
 
-            unset($config[self::PROP_EXTENDS]);
+            if ($configGroups[$group] === false) {
+                if (!empty($config)) {
+                    throw new DataSerializerException(
+                        sprintf(
+                            'Cannot serialize class "%s". Group cannot be extended from empty group "%s", path: %s.',
+                            $className,
+                            $group,
+                            implode(' -> ', $visitedGroups)
+                        )
+                    );
+                }
 
-            $config = array_merge($this->getConfig($data, $extendedGroup, $visitedGroups), $config);
+                return false;
+            } else {
+                $config = array_merge($configGroups[$group], $config);
+            }
+            $visitedGroups[] = $group;
+
+            if (isset($config[self::PROP_EXTENDS])) {
+                $extendedGroup = $config[self::PROP_EXTENDS];
+
+                if (in_array($extendedGroup, $visitedGroups, true)) {
+                    throw new DataSerializerException(
+                        sprintf(
+                            'Cannot serialize class "%s". Cyclic groups extension found for group "%s", path: %s.',
+                            $className,
+                            $extendedGroup,
+                            implode(' -> ', $visitedGroups)
+                        )
+                    );
+                }
+
+                unset($config[self::PROP_EXTENDS]);
+
+                $group = $extendedGroup;
+                continue;
+            }
+
+            break;
         }
 
         return $config;
