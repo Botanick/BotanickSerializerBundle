@@ -3,6 +3,7 @@ parameters:
     botanick.serializer.config_loader.array.class: Botanick\SerializerBundle\Serializer\Config\SerializerArrayConfigLoader
     botanick.serializer.config_loader.files.class: Botanick\SerializerBundle\Serializer\Config\SerializerFilesConfigLoader
     botanick.serializer.config_loader.bundles.class: Botanick\SerializerBundle\Serializer\Config\SerializerBundlesConfigLoader
+    botanick.serializer.config_loader.cache_dumper.class: Botanick\SerializerBundle\Serializer\Config\SerializerConfigCacheDumper
     botanick.serializer.data_serializer.scalar.class: Botanick\SerializerBundle\Serializer\DataSerializer\ScalarSerializer
     botanick.serializer.data_serializer.resource.class: Botanick\SerializerBundle\Serializer\DataSerializer\ResourceSerializer
     botanick.serializer.data_serializer.null.class: Botanick\SerializerBundle\Serializer\DataSerializer\NullSerializer
@@ -33,6 +34,10 @@ services:
         arguments:
             - @kernel
             - %botanick.serializer.config.config_loader.bundles%
+            - @botanick.serializer.config_loader.cache_dumper
+
+    botanick.serializer.config_loader.cache_dumper:
+        class: %botanick.serializer.config_loader.cache_dumper.class%
 
     botanick.serializer.config_loader:
         alias: botanick.serializer.config_loader.bundles

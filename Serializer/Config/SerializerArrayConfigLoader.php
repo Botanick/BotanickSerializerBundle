@@ -40,6 +40,14 @@ class SerializerArrayConfigLoader implements SerializerConfigLoaderInterface
         $this->_config = $config;
     }
 
+    /**
+     * @return array
+     */
+    protected function getConfig()
+    {
+        return $this->_config;
+    }
+
     protected function loadConfig()
     {
 
