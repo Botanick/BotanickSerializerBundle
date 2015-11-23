@@ -6,6 +6,7 @@ use Botanick\SerializerBundle\Exception\ConfigNotFoundException;
 use Botanick\SerializerBundle\Exception\DataSerializerException;
 use Botanick\SerializerBundle\Serializer\Config\SerializerConfigLoaderInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class ObjectSerializer extends DataSerializer
 {
@@ -16,6 +17,11 @@ class ObjectSerializer extends DataSerializer
      * @var SerializerConfigLoaderInterface
      */
     private $_configLoader;
+
+    /**
+     * @var PropertyAccessorInterface
+     */
+    private $_propertyAccessor = null;
 
     /**
      * @param SerializerConfigLoaderInterface $configLoader
@@ -31,6 +37,20 @@ class ObjectSerializer extends DataSerializer
     protected function getConfigLoader()
     {
         return $this->_configLoader;
+    }
+
+    /**
+     * @return PropertyAccessorInterface
+     */
+    protected function getPropertyAccessor()
+    {
+        if (is_null($this->_propertyAccessor)) {
+            $this->_propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
+                ->enableMagicCall()
+                ->getPropertyAccessor();
+        }
+
+        return $this->_propertyAccessor;
     }
 
     /**
@@ -50,35 +70,12 @@ class ObjectSerializer extends DataSerializer
 
         $result = [];
 
-        $propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
-            ->enableMagicCall()
-            ->getPropertyAccessor();
-
         foreach ($config as $prop => $propOptions) {
             if ($propOptions === false) {
                 continue;
             }
 
-            $getter = $prop;
-            if (is_array($propOptions)) {
-                if (isset($propOptions[self::PROP_GETTER])) {
-                    $getter = $propOptions[self::PROP_GETTER];
-                    unset($propOptions[self::PROP_GETTER]);
-                }
-            }
-
-            try {
-                $value = $propertyAccessor->getValue($data, $getter);
-            } catch (\Exception $ex) {
-                throw new DataSerializerException(
-                    sprintf(
-                        'Cannot access "%s" property in class "%s". %s',
-                        $prop,
-                        get_class($data),
-                        $ex->getMessage()
-                    )
-                );
-            }
+            $value = $this->getValue($data, $prop, $propOptions);
 
             $result[$prop] = $this->getSerializer()->serialize($value, $group, $propOptions);
         }
@@ -168,6 +165,37 @@ class ObjectSerializer extends DataSerializer
         }
 
         return $config;
+    }
+
+    /**
+     * @param object $object
+     * @param string $prop
+     * @param array $propOptions
+     * @return mixed
+     * @throws DataSerializerException
+     */
+    protected function getValue($object, $prop, $propOptions)
+    {
+        $getter = $prop;
+        if (is_array($propOptions)) {
+            if (isset($propOptions[self::PROP_GETTER])) {
+                $getter = $propOptions[self::PROP_GETTER];
+                unset($propOptions[self::PROP_GETTER]);
+            }
+        }
+
+        try {
+            return $this->getPropertyAccessor()->getValue($object, $getter);
+        } catch (\Exception $ex) {
+            throw new DataSerializerException(
+                sprintf(
+                    'Cannot access "%s" property in class "%s". %s',
+                    $prop,
+                    get_class($object),
+                    $ex->getMessage()
+                )
+            );
+        }
     }
 
     public function supports($data)
