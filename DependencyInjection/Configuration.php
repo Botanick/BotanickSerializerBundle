@@ -39,7 +39,7 @@ class Configuration implements ConfigurationInterface
                 ->children()
                     ->enumNode('type')
                         ->defaultValue('bundles')
-                        ->values(['array', 'files', 'bundles'])
+                        ->values(['array', 'files', 'bundles', 'service'])
                     ->end()
                     ->arrayNode('array')
                         ->defaultValue([])
@@ -53,6 +53,15 @@ class Configuration implements ConfigurationInterface
                         ->defaultValue([])
                         ->prototype('scalar')->end()
                     ->end()
+                    ->scalarNode('service')
+                        ->defaultNull()
+                    ->end()
+                ->end()
+                ->validate()
+                    ->ifTrue(function ($config) {
+                        return $config['type'] === 'service' && (!is_string($config['service']) || empty($config['service']));
+                    })
+                    ->thenInvalid('You must define "service" option.')
                 ->end()
             ->end();
     }

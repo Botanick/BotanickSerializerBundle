@@ -20,9 +20,14 @@ class BotanickSerializerExtension extends ConfigurableExtension
             $container->setParameter(sprintf('botanick.serializer.config.data_serializer.%s.options', $name), $options['options']);
         }
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
-        $container->setAlias('botanick.serializer.config_loader', sprintf('botanick.serializer.config_loader.%s', $mergedConfig['config_loader']['type']));
+        $container->setAlias(
+            'botanick.serializer.config_loader',
+            $mergedConfig['config_loader']['type'] === 'service'
+                ? $mergedConfig['config_loader']['service']
+                : sprintf('botanick.serializer.config_loader.%s', $mergedConfig['config_loader']['type'])
+        );
     }
 }
