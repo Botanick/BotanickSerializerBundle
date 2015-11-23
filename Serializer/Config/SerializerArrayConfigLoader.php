@@ -2,10 +2,9 @@
 
 namespace Botanick\SerializerBundle\Serializer\Config;
 
-use Botanick\SerializerBundle\Exception\ConfigLoadException;
 use Botanick\SerializerBundle\Exception\ConfigNotFoundException;
 
-class SerializerConfigLoader implements SerializerConfigLoaderInterface
+class SerializerArrayConfigLoader implements SerializerConfigLoaderInterface
 {
     /**
      * @var array

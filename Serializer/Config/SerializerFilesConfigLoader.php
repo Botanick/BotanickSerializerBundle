@@ -6,7 +6,7 @@ use Botanick\SerializerBundle\Exception\ConfigLoadException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
-class SerializerFilesConfigLoader extends SerializerConfigLoader
+class SerializerFilesConfigLoader extends SerializerArrayConfigLoader
 {
     /**
      * @var array
