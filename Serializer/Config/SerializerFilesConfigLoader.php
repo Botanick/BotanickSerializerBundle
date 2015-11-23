@@ -47,7 +47,14 @@ class SerializerFilesConfigLoader extends SerializerArrayConfigLoader
         $config = [];
 
         foreach ($this->getFiles() as $file) {
-            $filePath = realpath($file);
+            if (false === $filePath = realpath($file)) {
+                throw new ConfigLoadException(
+                    sprintf(
+                        'Unable to load config from "%s". File not found.',
+                        $file
+                    )
+                );
+            }
 
             try {
                 $yaml = Yaml::parse(file_get_contents($filePath));

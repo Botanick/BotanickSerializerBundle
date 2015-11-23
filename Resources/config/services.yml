@@ -1,6 +1,8 @@
 parameters:
     botanick.serializer.service.class: Botanick\SerializerBundle\Serializer\Serializer
-    botanick.serializer.config_loader.class: Botanick\SerializerBundle\Serializer\Config\SerializerBundlesConfigLoader
+    botanick.serializer.config_loader.array.class: Botanick\SerializerBundle\Serializer\Config\SerializerArrayConfigLoader
+    botanick.serializer.config_loader.files.class: Botanick\SerializerBundle\Serializer\Config\SerializerFilesConfigLoader
+    botanick.serializer.config_loader.bundles.class: Botanick\SerializerBundle\Serializer\Config\SerializerBundlesConfigLoader
     botanick.serializer.data_serializer.scalar.class: Botanick\SerializerBundle\Serializer\DataSerializer\ScalarSerializer
     botanick.serializer.data_serializer.resource.class: Botanick\SerializerBundle\Serializer\DataSerializer\ResourceSerializer
     botanick.serializer.data_serializer.null.class: Botanick\SerializerBundle\Serializer\DataSerializer\NullSerializer
@@ -16,11 +18,24 @@ services:
     botanick.serializer:
         alias: botanick.serializer.service
 
-    botanick.serializer.config_loader:
-        class: %botanick.serializer.config_loader.class%
+    botanick.serializer.config_loader.array:
+        class: %botanick.serializer.config_loader.array.class%
+        arguments:
+            - %botanick.serializer.config.config_loader.array%
+
+    botanick.serializer.config_loader.files:
+        class: %botanick.serializer.config_loader.files.class%
+        arguments:
+            - %botanick.serializer.config.config_loader.files%
+
+    botanick.serializer.config_loader.bundles:
+        class: %botanick.serializer.config_loader.bundles.class%
         arguments:
             - @kernel
-            - %botanick.serializer.config.bundles%
+            - %botanick.serializer.config.config_loader.bundles%
+
+    botanick.serializer.config_loader:
+        alias: botanick.serializer.config_loader.bundles
 
     botanick.serializer.data_serializer.scalar:
         class: %botanick.serializer.data_serializer.scalar.class%

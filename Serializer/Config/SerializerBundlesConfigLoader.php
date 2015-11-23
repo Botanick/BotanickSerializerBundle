@@ -20,10 +20,7 @@ class SerializerBundlesConfigLoader extends SerializerFilesConfigLoader
      * @param \AppKernel $appKernel
      * @param array $bundles
      */
-    public function __construct(
-        \AppKernel $appKernel,
-        array $bundles
-    ) {
+    public function __construct(\AppKernel $appKernel, array $bundles = []) {
         parent::__construct();
 
         $this->_appKernel = $appKernel;

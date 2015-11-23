@@ -25,19 +25,35 @@ class Configuration implements ConfigurationInterface
             ->root('botanick_serializer', 'array')
             ->children();
 
-        $this->addBundlesSection($root);
+        $this->addConfigLoaderSection($root);
         $this->addDataSerializersSection($root);
 
         return $treeBuilder;
     }
 
-    protected function addBundlesSection(NodeBuilder $builder)
+    protected function addConfigLoaderSection(NodeBuilder $builder)
     {
         $builder
-            ->arrayNode('bundles')
-                ->fixXmlConfig('bundle', 'bundles')
-                ->defaultValue(array())
-                ->prototype('scalar')->end()
+            ->arrayNode('config_loader')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->enumNode('type')
+                        ->defaultValue('bundles')
+                        ->values(['array', 'files', 'bundles'])
+                    ->end()
+                    ->arrayNode('array')
+                        ->defaultValue([])
+                        ->prototype('variable')->end()
+                    ->end()
+                    ->arrayNode('files')
+                        ->defaultValue([])
+                        ->prototype('scalar')->end()
+                    ->end()
+                    ->arrayNode('bundles')
+                        ->defaultValue([])
+                        ->prototype('scalar')->end()
+                    ->end()
+                ->end()
             ->end();
     }
 
