@@ -11,14 +11,14 @@ class BotanickSerializerExtension extends ConfigurableExtension
 {
     protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
     {
-        $container->setParameter('botanick.serializer.config.config_loader.array', $mergedConfig['config_loader']['array']);
-        $container->setParameter('botanick.serializer.config.config_loader.files', $mergedConfig['config_loader']['files']);
-        $container->setParameter('botanick.serializer.config.config_loader.dirs', $mergedConfig['config_loader']['dirs']);
-        $container->setParameter('botanick.serializer.config.config_loader.bundles', $mergedConfig['config_loader']['bundles']);
+        $container->setParameter('botanick_serializer.config.config_loader.array', $mergedConfig['config_loader']['array']);
+        $container->setParameter('botanick_serializer.config.config_loader.files', $mergedConfig['config_loader']['files']);
+        $container->setParameter('botanick_serializer.config.config_loader.dirs', $mergedConfig['config_loader']['dirs']);
+        $container->setParameter('botanick_serializer.config.config_loader.bundles', $mergedConfig['config_loader']['bundles']);
 
         foreach ($mergedConfig['data_serializers'] as $name => $options) {
-            $container->setParameter(sprintf('botanick.serializer.config.data_serializer.%s.priority', $name), $options['priority']);
-            $container->setParameter(sprintf('botanick.serializer.config.data_serializer.%s.options', $name), $options['options']);
+            $container->setParameter(sprintf('botanick_serializer.config.data_serializer.%s.priority', $name), $options['priority']);
+            $container->setParameter(sprintf('botanick_serializer.config.data_serializer.%s.options', $name), $options['options']);
         }
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));

@@ -23,23 +23,23 @@ services:
     botanick.serializer.config_loader.array:
         class: %botanick.serializer.config_loader.array.class%
         arguments:
-            - %botanick.serializer.config.config_loader.array%
+            - %botanick_serializer.config.config_loader.array%
 
     botanick.serializer.config_loader.files:
         class: %botanick.serializer.config_loader.files.class%
         arguments:
-            - %botanick.serializer.config.config_loader.files%
+            - %botanick_serializer.config.config_loader.files%
 
     botanick.serializer.config_loader.dirs:
         class: %botanick.serializer.config_loader.dirs.class%
         arguments:
-            - %botanick.serializer.config.config_loader.dirs%
+            - %botanick_serializer.config.config_loader.dirs%
 
     botanick.serializer.config_loader.bundles:
         class: %botanick.serializer.config_loader.bundles.class%
         arguments:
             - @kernel
-            - %botanick.serializer.config.config_loader.bundles%
+            - %botanick_serializer.config.config_loader.bundles%
             - @botanick.serializer.config_loader.cache_dumper
 
     botanick.serializer.config_loader.cache_dumper:
@@ -52,41 +52,41 @@ services:
         class: %botanick.serializer.data_serializer.scalar.class%
         public: false
         calls:
-            - [ 'setDefaultOptions', [ %botanick.serializer.config.data_serializer.scalar.options% ] ]
+            - [ 'setDefaultOptions', [ %botanick_serializer.config.data_serializer.scalar.options% ] ]
         tags:
-            - { name: botanick.serializer.data_serializer, priority: %botanick.serializer.config.data_serializer.scalar.priority% }
+            - { name: botanick.serializer.data_serializer, priority: %botanick_serializer.config.data_serializer.scalar.priority% }
 
     botanick.serializer.data_serializer.resource:
         class: %botanick.serializer.data_serializer.resource.class%
         public: false
         tags:
-            - { name: botanick.serializer.data_serializer, priority: %botanick.serializer.config.data_serializer.resource.priority% }
+            - { name: botanick.serializer.data_serializer, priority: %botanick_serializer.config.data_serializer.resource.priority% }
 
     botanick.serializer.data_serializer.null:
         class: %botanick.serializer.data_serializer.null.class%
         public: false
         tags:
-            - { name: botanick.serializer.data_serializer, priority: %botanick.serializer.config.data_serializer.null.priority% }
+            - { name: botanick.serializer.data_serializer, priority: %botanick_serializer.config.data_serializer.null.priority% }
 
     botanick.serializer.data_serializer.array:
         class: %botanick.serializer.data_serializer.array.class%
         public: false
         tags:
-            - { name: botanick.serializer.data_serializer, priority: %botanick.serializer.config.data_serializer.array.priority% }
+            - { name: botanick.serializer.data_serializer, priority: %botanick_serializer.config.data_serializer.array.priority% }
 
     botanick.serializer.data_serializer.traversable:
         class: %botanick.serializer.data_serializer.traversable.class%
         public: false
         tags:
-            - { name: botanick.serializer.data_serializer, priority: %botanick.serializer.config.data_serializer.traversable.priority% }
+            - { name: botanick.serializer.data_serializer, priority: %botanick_serializer.config.data_serializer.traversable.priority% }
 
     botanick.serializer.data_serializer.datetime:
         class: %botanick.serializer.data_serializer.datetime.class%
         public: false
         calls:
-            - [ 'setDefaultOptions', [ %botanick.serializer.config.data_serializer.datetime.options% ] ]
+            - [ 'setDefaultOptions', [ %botanick_serializer.config.data_serializer.datetime.options% ] ]
         tags:
-            - { name: botanick.serializer.data_serializer, priority: %botanick.serializer.config.data_serializer.datetime.priority% }
+            - { name: botanick.serializer.data_serializer, priority: %botanick_serializer.config.data_serializer.datetime.priority% }
 
     botanick.serializer.data_serializer.object:
         class: %botanick.serializer.data_serializer.object.class%
@@ -94,4 +94,4 @@ services:
         calls:
             - [ 'setConfigLoader', [ @botanick.serializer.config_loader ] ]
         tags:
-            - { name: botanick.serializer.data_serializer, priority: %botanick.serializer.config.data_serializer.object.priority% }
+            - { name: botanick.serializer.data_serializer, priority: %botanick_serializer.config.data_serializer.object.priority% }
