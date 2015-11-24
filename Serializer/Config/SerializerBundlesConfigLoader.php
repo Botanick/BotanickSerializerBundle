@@ -3,7 +3,9 @@
 namespace Botanick\SerializerBundle\Serializer\Config;
 
 use AppKernel;
-use Botanick\SerializerBundle\Exception\ConfigLoadException;
+use Botanick\Serializer\Exception\ConfigLoadException;
+use Botanick\Serializer\Serializer\Config\SerializerConfigCache;
+use Botanick\Serializer\Serializer\Config\SerializerDirsConfigLoader;
 
 class SerializerBundlesConfigLoader extends SerializerDirsConfigLoader
 {

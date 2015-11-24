@@ -1,18 +1,18 @@
 parameters:
-    botanick.serializer.service.class: Botanick\SerializerBundle\Serializer\Serializer
-    botanick.serializer.config_loader.array.class: Botanick\SerializerBundle\Serializer\Config\SerializerArrayConfigLoader
-    botanick.serializer.config_loader.files.class: Botanick\SerializerBundle\Serializer\Config\SerializerFilesConfigLoader
-    botanick.serializer.config_loader.dirs.class: Botanick\SerializerBundle\Serializer\Config\SerializerDirsConfigLoader
+    botanick.serializer.service.class: Botanick\Serializer\Serializer\Serializer
+    botanick.serializer.config_loader.array.class: Botanick\Serializer\Serializer\Config\SerializerArrayConfigLoader
+    botanick.serializer.config_loader.files.class: Botanick\Serializer\Serializer\Config\SerializerFilesConfigLoader
+    botanick.serializer.config_loader.dirs.class: Botanick\Serializer\Serializer\Config\SerializerDirsConfigLoader
     botanick.serializer.config_loader.bundles.class: Botanick\SerializerBundle\Serializer\Config\SerializerBundlesConfigLoader
-    botanick.serializer.config_loader.cache.class: Botanick\SerializerBundle\Serializer\Config\SerializerConfigCache
-    botanick.serializer.config_loader.cache_dumper.class: Botanick\SerializerBundle\Serializer\Config\SerializerConfigCacheDumper
-    botanick.serializer.data_serializer.scalar.class: Botanick\SerializerBundle\Serializer\DataSerializer\ScalarSerializer
-    botanick.serializer.data_serializer.resource.class: Botanick\SerializerBundle\Serializer\DataSerializer\ResourceSerializer
-    botanick.serializer.data_serializer.null.class: Botanick\SerializerBundle\Serializer\DataSerializer\NullSerializer
-    botanick.serializer.data_serializer.array.class: Botanick\SerializerBundle\Serializer\DataSerializer\ArraySerializer
-    botanick.serializer.data_serializer.traversable.class: Botanick\SerializerBundle\Serializer\DataSerializer\TraversableSerializer
-    botanick.serializer.data_serializer.datetime.class: Botanick\SerializerBundle\Serializer\DataSerializer\DateTimeSerializer
-    botanick.serializer.data_serializer.object.class: Botanick\SerializerBundle\Serializer\DataSerializer\ObjectSerializer
+    botanick.serializer.config_loader.cache.class: Botanick\Serializer\Serializer\Config\SerializerConfigCache
+    botanick.serializer.config_loader.cache_dumper.class: Botanick\Serializer\Serializer\Config\SerializerConfigCacheDumper
+    botanick.serializer.data_serializer.scalar.class: Botanick\Serializer\Serializer\DataSerializer\ScalarSerializer
+    botanick.serializer.data_serializer.resource.class: Botanick\Serializer\Serializer\DataSerializer\ResourceSerializer
+    botanick.serializer.data_serializer.null.class: Botanick\Serializer\Serializer\DataSerializer\NullSerializer
+    botanick.serializer.data_serializer.array.class: Botanick\Serializer\Serializer\DataSerializer\ArraySerializer
+    botanick.serializer.data_serializer.traversable.class: Botanick\Serializer\Serializer\DataSerializer\TraversableSerializer
+    botanick.serializer.data_serializer.datetime.class: Botanick\Serializer\Serializer\DataSerializer\DateTimeSerializer
+    botanick.serializer.data_serializer.object.class: Botanick\Serializer\Serializer\DataSerializer\ObjectSerializer
 
 services:
     botanick.serializer.service:
