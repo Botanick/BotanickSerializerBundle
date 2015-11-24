@@ -8,7 +8,7 @@ use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Finder\Finder;
 
-class SerializerBundlesConfigLoader extends SerializerFilesConfigLoader
+class SerializerBundlesConfigLoader extends SerializerDirsConfigLoader
 {
     /**
      * @var AppKernel
@@ -88,10 +88,9 @@ class SerializerBundlesConfigLoader extends SerializerFilesConfigLoader
         );
 
         if (!$cache->isFresh()) {
-            $files = [];
+            $dirs = [];
             $resources = [];
 
-            $finder = new Finder();
             foreach ($this->getBundles() as $bundle) {
                 try {
                     $dir = $this->getAppKernel()->locateResource($bundle . '/Resources/config/botanick-serializer/');
@@ -100,13 +99,10 @@ class SerializerBundlesConfigLoader extends SerializerFilesConfigLoader
                 }
 
                 $resources[] = new DirectoryResource($dir);
-                $finder->files()->in($dir);
-                foreach ($finder as $file) {
-                    $files[] = $file;
-                }
+                $dirs[] = $dir;
             }
 
-            parent::setFiles($files);
+            parent::setDirs($dirs);
             parent::loadConfig();
 
             $cache->write($this->getDumper()->dump($class, $this->getConfig()), $resources);

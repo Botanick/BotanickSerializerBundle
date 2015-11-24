@@ -55,6 +55,14 @@ class SerializerFilesConfigLoader extends SerializerArrayConfigLoader
                     )
                 );
             }
+            if (!is_readable($filePath)) {
+                throw new ConfigLoadException(
+                    sprintf(
+                        'Unable to load config from "%s". File is not readable.',
+                        $file
+                    )
+                );
+            }
 
             try {
                 $yaml = Yaml::parse(file_get_contents($filePath));
