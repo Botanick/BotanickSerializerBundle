@@ -4,9 +4,6 @@ namespace Botanick\SerializerBundle\Serializer\Config;
 
 use AppKernel;
 use Botanick\SerializerBundle\Exception\ConfigLoadException;
-use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\Config\Resource\DirectoryResource;
-use Symfony\Component\Finder\Finder;
 
 class SerializerBundlesConfigLoader extends SerializerDirsConfigLoader
 {
@@ -19,21 +16,22 @@ class SerializerBundlesConfigLoader extends SerializerDirsConfigLoader
      */
     private $_bundles = [];
     /**
-     * @var SerializerConfigCacheDumper
+     * @var SerializerConfigCache
      */
-    private $_dumper;
+    private $_cache;
 
     /**
      * @param AppKernel $appKernel
      * @param array $bundles
-     * @param SerializerConfigCacheDumper $dumper
+     * @param SerializerConfigCache $cache
      */
-    public function __construct(AppKernel $appKernel, array $bundles = [], SerializerConfigCacheDumper $dumper) {
+    public function __construct(AppKernel $appKernel, array $bundles = [], SerializerConfigCache $cache = null)
+    {
         parent::__construct();
 
         $this->_appKernel = $appKernel;
         $this->setBundles($bundles);
-        $this->_dumper = $dumper;
+        $this->_cache = $cache;
     }
 
     /**
@@ -61,11 +59,19 @@ class SerializerBundlesConfigLoader extends SerializerDirsConfigLoader
     }
 
     /**
-     * @return SerializerConfigCacheDumper
+     * @return SerializerConfigCache
      */
-    protected function getDumper()
+    private function getCache()
     {
-        return $this->_dumper;
+        return $this->_cache;
+    }
+
+    /**
+     * @return string
+     */
+    private function getCacheType()
+    {
+        return 'bundles';
     }
 
     /**
@@ -73,46 +79,46 @@ class SerializerBundlesConfigLoader extends SerializerDirsConfigLoader
      */
     protected function loadConfig()
     {
-        $class = sprintf(
-            '%s%sBotanickSerializerConfig',
-            $this->getAppKernel()->getName(),
-            ucfirst($this->getAppKernel()->getEnvironment())
-        );
-        $cache = new ConfigCache(
-            sprintf(
-                '%s/%s.php',
-                $this->getAppKernel()->getCacheDir(),
-                $class
-            ),
-            $this->getAppKernel()->isDebug()
-        );
-
-        if (!$cache->isFresh()) {
-            $dirs = [];
-            $resources = [];
-
-            foreach ($this->getBundles() as $bundle) {
-                try {
-                    $dir = $this->getAppKernel()->locateResource($bundle . '/Resources/config/botanick-serializer/');
-                } catch (\Exception $ex) {
-                    throw new ConfigLoadException(sprintf('Unable to find "botanick-serializer" directory in %s bundle.', $bundle));
-                }
-
-                $resources[] = new DirectoryResource($dir);
-                $dirs[] = $dir;
-            }
-
-            parent::setDirs($dirs);
-            parent::loadConfig();
-
-            $cache->write($this->getDumper()->dump($class, $this->getConfig()), $resources);
+        if (!$this->getCache()) {
+            $this->loadConfigInternal();
 
             return;
         }
 
-        require_once $cache;
-        /** @var SerializerConfigInterface $config */
-        $config = new $class();
-        $this->setConfig($config->getConfig());
+        $config = $this->getCache()->getCachedConfig(
+            $this->getCacheType(),
+            $this->getBundles(),
+            function () {
+                return $this->loadConfigInternal();
+            }
+        );
+        $this->setConfig($config);
+    }
+
+    /**
+     * @return array
+     * @throws ConfigLoadException
+     */
+    private function loadConfigInternal()
+    {
+        $dirs = [];
+
+        foreach ($this->getBundles() as $bundle) {
+            try {
+                $dir = $this->getAppKernel()->locateResource($bundle . '/Resources/config/botanick-serializer/');
+            } catch (\Exception $ex) {
+                throw new ConfigLoadException(sprintf('Unable to find "botanick-serializer" directory in %s bundle.', $bundle));
+            }
+
+            $dirs[] = $dir;
+        }
+
+        parent::setDirs($dirs);
+        parent::loadConfig();
+
+        return [
+            $this->getConfig(),
+            $dirs
+        ];
     }
 }

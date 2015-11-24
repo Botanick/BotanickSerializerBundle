@@ -5,7 +5,19 @@ namespace Botanick\SerializerBundle\Serializer\Config;
 interface SerializerConfigInterface
 {
     /**
-     * @return array
+     * @param string $type
+     * @return bool
+     */
+    public function isType($type);
+
+    /**
+     * @param mixed $sources
+     * @return bool
+     */
+    public function isFromSources($sources);
+
+    /**
+     * @return mixed
      */
     public function getConfig();
 }

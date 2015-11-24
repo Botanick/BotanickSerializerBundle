@@ -16,6 +16,8 @@ class BotanickSerializerExtension extends ConfigurableExtension
         $container->setParameter('botanick_serializer.config.config_loader.dirs', $mergedConfig['config_loader']['dirs']);
         $container->setParameter('botanick_serializer.config.config_loader.bundles', $mergedConfig['config_loader']['bundles']);
 
+        $container->setParameter('botanick_serializer.config_loader.cache.cache_class_prefix', $container->getParameter('kernel.name') . ucfirst($container->getParameter('kernel.environment')));
+
         foreach ($mergedConfig['data_serializers'] as $name => $options) {
             $container->setParameter(sprintf('botanick_serializer.config.data_serializer.%s.priority', $name), $options['priority']);
             $container->setParameter(sprintf('botanick_serializer.config.data_serializer.%s.options', $name), $options['options']);

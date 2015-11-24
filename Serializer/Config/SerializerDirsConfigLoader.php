@@ -13,13 +13,20 @@ class SerializerDirsConfigLoader extends SerializerFilesConfigLoader
     private $_dirs = [];
 
     /**
-     * @param array $dirs
+     * @var SerializerConfigCache
      */
-    public function __construct(array $dirs = [])
+    private $_cache;
+
+    /**
+     * @param array $dirs
+     * @param SerializerConfigCache $cache
+     */
+    public function __construct(array $dirs = [], SerializerConfigCache $cache = null)
     {
         parent::__construct();
 
         $this->setDirs($dirs);
+        $this->_cache = $cache;
     }
 
     /**
@@ -39,9 +46,47 @@ class SerializerDirsConfigLoader extends SerializerFilesConfigLoader
     }
 
     /**
+     * @return SerializerConfigCache
+     */
+    private function getCache()
+    {
+        return $this->_cache;
+    }
+
+    /**
+     * @return string
+     */
+    private function getCacheType()
+    {
+        return 'dirs';
+    }
+
+    /**
      * @throws ConfigLoadException
      */
     protected function loadConfig()
+    {
+        if (!$this->getCache()) {
+            $this->loadConfigInternal();
+
+            return;
+        }
+
+        $config = $this->getCache()->getCachedConfig(
+            $this->getCacheType(),
+            $this->getDirs(),
+            function () {
+                return $this->loadConfigInternal();
+            }
+        );
+        $this->setConfig($config);
+    }
+
+    /**
+     * @return array
+     * @throws ConfigLoadException
+     */
+    private function loadConfigInternal()
     {
         $files = [];
 
@@ -80,5 +125,10 @@ class SerializerDirsConfigLoader extends SerializerFilesConfigLoader
 
         parent::setFiles($files);
         parent::loadConfig();
+
+        return [
+            $this->getConfig(),
+            $this->getDirs()
+        ];
     }
 }

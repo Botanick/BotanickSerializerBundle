@@ -4,6 +4,7 @@ parameters:
     botanick.serializer.config_loader.files.class: Botanick\SerializerBundle\Serializer\Config\SerializerFilesConfigLoader
     botanick.serializer.config_loader.dirs.class: Botanick\SerializerBundle\Serializer\Config\SerializerDirsConfigLoader
     botanick.serializer.config_loader.bundles.class: Botanick\SerializerBundle\Serializer\Config\SerializerBundlesConfigLoader
+    botanick.serializer.config_loader.cache.class: Botanick\SerializerBundle\Serializer\Config\SerializerConfigCache
     botanick.serializer.config_loader.cache_dumper.class: Botanick\SerializerBundle\Serializer\Config\SerializerConfigCacheDumper
     botanick.serializer.data_serializer.scalar.class: Botanick\SerializerBundle\Serializer\DataSerializer\ScalarSerializer
     botanick.serializer.data_serializer.resource.class: Botanick\SerializerBundle\Serializer\DataSerializer\ResourceSerializer
@@ -29,24 +30,34 @@ services:
         class: %botanick.serializer.config_loader.files.class%
         arguments:
             - %botanick_serializer.config.config_loader.files%
+            - @botanick.serializer.config_loader.cache
 
     botanick.serializer.config_loader.dirs:
         class: %botanick.serializer.config_loader.dirs.class%
         arguments:
             - %botanick_serializer.config.config_loader.dirs%
+            - @botanick.serializer.config_loader.cache
 
     botanick.serializer.config_loader.bundles:
         class: %botanick.serializer.config_loader.bundles.class%
         arguments:
             - @kernel
             - %botanick_serializer.config.config_loader.bundles%
+            - @botanick.serializer.config_loader.cache
+
+    botanick.serializer.config_loader:
+        alias: botanick.serializer.config_loader.bundles
+
+    botanick.serializer.config_loader.cache:
+        class: %botanick.serializer.config_loader.cache.class%
+        arguments:
+            - %botanick_serializer.config_loader.cache.cache_class_prefix%
+            - %kernel.debug%
+            - %kernel.cache_dir%
             - @botanick.serializer.config_loader.cache_dumper
 
     botanick.serializer.config_loader.cache_dumper:
         class: %botanick.serializer.config_loader.cache_dumper.class%
-
-    botanick.serializer.config_loader:
-        alias: botanick.serializer.config_loader.bundles
 
     botanick.serializer.data_serializer.scalar:
         class: %botanick.serializer.data_serializer.scalar.class%

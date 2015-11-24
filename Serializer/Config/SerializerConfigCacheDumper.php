@@ -6,21 +6,34 @@ class SerializerConfigCacheDumper
 {
     /**
      * @param string $class
+     * @param string $type
+     * @param array $sources
      * @param array $config
      * @return string
      */
-    public function dump($class, $config)
+    public function dump($class, $type, $sources, $config)
     {
-        $serializedConfig = var_export($config, true);
+        $sources = sha1(serialize($sources));
+        $config = var_export($config, true);
 
         return <<<EOF
 <?php
 
 class {$class} implements Botanick\\SerializerBundle\\Serializer\\Config\\SerializerConfigInterface
 {
+    public function isType(\$type)
+    {
+        return '{$type}' === \$type;
+    }
+
+    public function isFromSources(\$sources)
+    {
+        return '{$sources}' === sha1(serialize(\$sources));
+    }
+
     public function getConfig()
     {
-        return {$serializedConfig};
+        return {$config};
     }
 }
 EOF;
