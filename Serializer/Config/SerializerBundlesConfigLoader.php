@@ -109,7 +109,11 @@ class SerializerBundlesConfigLoader extends SerializerDirsConfigLoader
             try {
                 $dir = $this->getAppKernel()->locateResource($bundle . '/Resources/config/botanick-serializer/');
             } catch (\Exception $ex) {
-                throw new ConfigLoadException(sprintf('Unable to find "botanick-serializer" directory in %s bundle.', $bundle));
+                throw new ConfigLoadException(
+                    sprintf('Unable to find "botanick-serializer" directory in %s bundle.', $bundle),
+                    0,
+                    $ex
+                );
             }
 
             $dirs[] = $dir;
