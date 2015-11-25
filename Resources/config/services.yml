@@ -88,6 +88,8 @@ services:
     botanick.serializer.data_serializer.traversable:
         class: %botanick.serializer.data_serializer.traversable.class%
         public: false
+        calls:
+            - [ 'setObjectSerializer', [ @botanick.serializer.data_serializer.object ] ]
         tags:
             - { name: botanick.serializer.data_serializer, priority: %botanick_serializer.config.data_serializer.traversable.priority% }
 
