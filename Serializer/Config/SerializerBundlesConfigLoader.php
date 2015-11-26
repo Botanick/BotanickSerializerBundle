@@ -2,17 +2,17 @@
 
 namespace Botanick\SerializerBundle\Serializer\Config;
 
-use AppKernel;
 use Botanick\Serializer\Exception\ConfigLoadException;
 use Botanick\Serializer\Serializer\Config\SerializerConfigCache;
 use Botanick\Serializer\Serializer\Config\SerializerDirsConfigLoader;
+use Symfony\Component\Config\FileLocatorInterface;
 
 class SerializerBundlesConfigLoader extends SerializerDirsConfigLoader
 {
     /**
-     * @var AppKernel
+     * @var FileLocatorInterface
      */
-    private $_appKernel;
+    private $_fileLocator;
     /**
      * @var array
      */
@@ -23,15 +23,15 @@ class SerializerBundlesConfigLoader extends SerializerDirsConfigLoader
     private $_cache;
 
     /**
-     * @param AppKernel $appKernel
+     * @param FileLocatorInterface $fileLocator
      * @param array $bundles
      * @param SerializerConfigCache $cache
      */
-    public function __construct(AppKernel $appKernel, array $bundles = [], SerializerConfigCache $cache = null)
+    public function __construct(FileLocatorInterface $fileLocator, array $bundles = [], SerializerConfigCache $cache = null)
     {
         parent::__construct();
 
-        $this->_appKernel = $appKernel;
+        $this->_fileLocator = $fileLocator;
         $this->setBundles($bundles);
         $this->_cache = $cache;
     }
@@ -45,11 +45,11 @@ class SerializerBundlesConfigLoader extends SerializerDirsConfigLoader
     }
 
     /**
-     * @return AppKernel
+     * @return FileLocatorInterface
      */
-    protected function getAppKernel()
+    protected function getFileLocator()
     {
-        return $this->_appKernel;
+        return $this->_fileLocator;
     }
 
     /**
@@ -107,8 +107,8 @@ class SerializerBundlesConfigLoader extends SerializerDirsConfigLoader
 
         foreach ($this->getBundles() as $bundle) {
             try {
-                $dir = $this->getAppKernel()->locateResource($bundle . '/Resources/config/botanick-serializer/');
-            } catch (\Exception $ex) {
+                $locatedDirs = $this->getFileLocator()->locate($bundle . '/Resources/config/botanick-serializer/', null, false);
+            } catch (\InvalidArgumentException $ex) {
                 throw new ConfigLoadException(
                     sprintf('Unable to find "botanick-serializer" directory in %s bundle.', $bundle),
                     0,
@@ -116,7 +116,7 @@ class SerializerBundlesConfigLoader extends SerializerDirsConfigLoader
                 );
             }
 
-            $dirs[] = $dir;
+            $dirs = array_merge($dirs, array_reverse($locatedDirs));
         }
 
         parent::setDirs($dirs);

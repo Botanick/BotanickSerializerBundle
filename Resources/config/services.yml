@@ -41,7 +41,7 @@ services:
     botanick.serializer.config_loader.bundles:
         class: %botanick.serializer.config_loader.bundles.class%
         arguments:
-            - @kernel
+            - @file_locator
             - %botanick_serializer.config.config_loader.bundles%
             - @botanick.serializer.config_loader.cache
 
