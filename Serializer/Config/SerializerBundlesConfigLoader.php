@@ -16,7 +16,7 @@ class SerializerBundlesConfigLoader extends SerializerDirsConfigLoader
     /**
      * @var array
      */
-    private $_bundles = [];
+    private $_bundles = array();
     /**
      * @var SerializerConfigCache
      */
@@ -27,7 +27,7 @@ class SerializerBundlesConfigLoader extends SerializerDirsConfigLoader
      * @param array $bundles
      * @param SerializerConfigCache $cache
      */
-    public function __construct(FileLocatorInterface $fileLocator, array $bundles = [], SerializerConfigCache $cache = null)
+    public function __construct(FileLocatorInterface $fileLocator, array $bundles = array(), SerializerConfigCache $cache = null)
     {
         parent::__construct();
 
@@ -122,9 +122,9 @@ class SerializerBundlesConfigLoader extends SerializerDirsConfigLoader
         parent::setDirs($dirs);
         parent::loadConfig();
 
-        return [
+        return array(
             $this->getConfig(),
             $dirs
-        ];
+        );
     }
 }

@@ -8,15 +8,15 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
-    protected $_dataSerializers = [
-        'scalar' => ['priority' => -9999, 'options' => ['type' => false, 'format' => false]],
-        'resource' => ['priority' => -9999, 'options' => []],
-        'null' => ['priority' => -9999, 'options' => []],
-        'array' => ['priority' => -9999, 'options' => []],
-        'traversable' => ['priority' => -8888, 'options' => []],
-        'datetime' => ['priority' => -8888, 'options' => ['format' => false]],
-        'object' => ['priority' => -9999, 'options' => []]
-    ];
+    protected $_dataSerializers = array(
+        'scalar' => array('priority' => -9999, 'options' => array('type' => false, 'format' => false)),
+        'resource' => array('priority' => -9999, 'options' => array()),
+        'null' => array('priority' => -9999, 'options' => array()),
+        'array' => array('priority' => -9999, 'options' => array()),
+        'traversable' => array('priority' => -8888, 'options' => array()),
+        'datetime' => array('priority' => -8888, 'options' => array('format' => false)),
+        'object' => array('priority' => -9999, 'options' => array())
+    );
 
     public function getConfigTreeBuilder()
     {
@@ -39,22 +39,22 @@ class Configuration implements ConfigurationInterface
                 ->children()
                     ->enumNode('type')
                         ->defaultValue('bundles')
-                        ->values(['array', 'files', 'dirs', 'bundles', 'service'])
+                        ->values(array('array', 'files', 'dirs', 'bundles', 'service'))
                     ->end()
                     ->arrayNode('array')
-                        ->defaultValue([])
+                        ->defaultValue(array())
                         ->prototype('variable')->end()
                     ->end()
                     ->arrayNode('files')
-                        ->defaultValue([])
+                        ->defaultValue(array())
                         ->prototype('scalar')->end()
                     ->end()
                     ->arrayNode('dirs')
-                        ->defaultValue([])
+                        ->defaultValue(array())
                         ->prototype('scalar')->end()
                     ->end()
                     ->arrayNode('bundles')
-                        ->defaultValue([])
+                        ->defaultValue(array())
                         ->prototype('scalar')->end()
                     ->end()
                     ->scalarNode('service')
