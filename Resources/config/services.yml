@@ -23,23 +23,27 @@ services:
 
     botanick.serializer.config_loader.array:
         class: %botanick.serializer.config_loader.array.class%
+        public: false
         arguments:
             - %botanick_serializer.config.config_loader.array%
 
     botanick.serializer.config_loader.files:
         class: %botanick.serializer.config_loader.files.class%
+        public: false
         arguments:
             - %botanick_serializer.config.config_loader.files%
             - @botanick.serializer.config_loader.cache
 
     botanick.serializer.config_loader.dirs:
         class: %botanick.serializer.config_loader.dirs.class%
+        public: false
         arguments:
             - %botanick_serializer.config.config_loader.dirs%
             - @botanick.serializer.config_loader.cache
 
     botanick.serializer.config_loader.bundles:
         class: %botanick.serializer.config_loader.bundles.class%
+        public: false
         arguments:
             - @file_locator
             - %botanick_serializer.config.config_loader.bundles%
@@ -50,6 +54,7 @@ services:
 
     botanick.serializer.config_loader.cache:
         class: %botanick.serializer.config_loader.cache.class%
+        public: false
         arguments:
             - %botanick_serializer.config_loader.cache.cache_class_prefix%
             - %kernel.debug%
@@ -58,6 +63,7 @@ services:
 
     botanick.serializer.config_loader.cache_dumper:
         class: %botanick.serializer.config_loader.cache_dumper.class%
+        public: false
 
     botanick.serializer.data_serializer.scalar:
         class: %botanick.serializer.data_serializer.scalar.class%
