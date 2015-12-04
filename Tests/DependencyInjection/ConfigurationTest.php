@@ -17,6 +17,24 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedConfig, $this->processConfiguration($bundleConfig));
     }
 
+    public function testConfigurationOnService()
+    {
+        $config = $this->processConfiguration(array('config_loader' => array('type' => 'service', 'service' => 'my_service')));
+
+        $this->assertEquals('service', $config['config_loader']['type']);
+        $this->assertEquals('my_service', $config['config_loader']['service']);
+    }
+
+    public function testConfigurationFailureOnEmptyService()
+    {
+        $this->setExpectedExceptionRegExp(
+            '\Exception',
+            '~You must define "service" option\.~'
+        );
+
+        $this->processConfiguration(array('config_loader' => array('type' => 'service')));
+    }
+
     public function testConfigurationProvider()
     {
         $defaultConfig = array(
@@ -55,7 +73,11 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    protected function processConfiguration($config)
+    /**
+     * @param array $config
+     * @return array
+     */
+    protected function processConfiguration(array $config)
     {
         $processor = new Processor();
 
