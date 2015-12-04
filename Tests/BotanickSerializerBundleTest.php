@@ -12,7 +12,10 @@ class BotanickSerializerBundleTest extends \PHPUnit_Framework_TestCase
     {
         $bundle = new BotanickSerializerBundle();
 
-        $containerBuilder = $this->getMock('Symfony\\Component\\DependencyInjection\\ContainerBuilder');
+        $containerBuilder = $this->getMockBuilder('Symfony\\Component\\DependencyInjection\\ContainerBuilder')
+            ->disableOriginalConstructor()
+            ->setMethods(array('addCompilerPass'))
+            ->getMock();
         $that = $this;
         $containerBuilder
             ->expects($this->once())
