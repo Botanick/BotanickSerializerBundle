@@ -87,11 +87,12 @@ class SerializerBundlesConfigLoader extends SerializerDirsConfigLoader
             return;
         }
 
+        $that = $this;
         $config = $this->getCache()->getCachedConfig(
             $this->getCacheType(),
             $this->getBundles(),
-            function () {
-                return $this->loadConfigInternal();
+            function () use ($that) {
+                return $that->loadConfigInternal_public();
             }
         );
         $this->setConfig($config);
@@ -107,7 +108,7 @@ class SerializerBundlesConfigLoader extends SerializerDirsConfigLoader
 
         foreach ($this->getBundles() as $bundle) {
             try {
-                $locatedDirs = $this->getFileLocator()->locate($bundle . '/Resources/config/botanick-serializer/', null, false);
+                $locatedDirs = $this->getFileLocator()->locate($bundle . '/Resources/config/botanick-serializer', null, false);
             } catch (\InvalidArgumentException $ex) {
                 throw new ConfigLoadException(
                     sprintf('Unable to find "botanick-serializer" directory in %s bundle.', $bundle),
@@ -126,5 +127,13 @@ class SerializerBundlesConfigLoader extends SerializerDirsConfigLoader
             $this->getConfig(),
             $dirs
         );
+    }
+
+    /**
+     * @internal Because of PHP 5.3 closures...
+     */
+    public function loadConfigInternal_public()
+    {
+        return $this->loadConfigInternal();
     }
 }
