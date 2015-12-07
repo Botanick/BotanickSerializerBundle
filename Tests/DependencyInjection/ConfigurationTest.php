@@ -10,7 +10,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     /**
      * @param string $expectedConfig
      * @param string $bundleConfig
-     * @dataProvider testConfigurationProvider
+     * @dataProvider configurationProvider
      */
     public function testConfiguration($expectedConfig, $bundleConfig)
     {
@@ -35,7 +35,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->processConfiguration(array('config_loader' => array('type' => 'service')));
     }
 
-    public function testConfigurationProvider()
+    public function configurationProvider()
     {
         $defaultConfig = array(
             'config_loader' => array(

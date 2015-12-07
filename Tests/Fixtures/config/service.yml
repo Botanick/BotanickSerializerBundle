@@ -1,0 +1,8 @@
+botanick_serializer:
+    config_loader:
+        type: service
+        service: my_config_loader
+
+services:
+    my_config_loader:
+        class: Botanick\SerializerBundle\Tests\Fixtures\ConfigLoader

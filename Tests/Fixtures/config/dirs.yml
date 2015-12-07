@@ -1,0 +1,4 @@
+botanick_serializer:
+    config_loader:
+        type: dirs
+        dirs: []
