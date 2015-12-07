@@ -103,7 +103,7 @@ class SerializerBundlesConfigLoader extends SerializerDirsConfigLoader
      */
     private function loadConfigInternal()
     {
-        $dirs = [];
+        $dirs = array();
 
         foreach ($this->getBundles() as $bundle) {
             try {
