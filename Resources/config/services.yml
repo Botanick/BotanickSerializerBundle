@@ -112,6 +112,7 @@ services:
         class: %botanick.serializer.data_serializer.object.class%
         public: false
         calls:
+            - [ 'setDefaultOptions', [ %botanick_serializer.config.data_serializer.object.options% ] ]
             - [ 'setConfigLoader', [ @botanick.serializer.config_loader ] ]
         tags:
             - { name: botanick.serializer.data_serializer, priority: %botanick_serializer.config.data_serializer.object.priority% }

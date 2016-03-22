@@ -53,7 +53,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
                 'array' => array('priority' => -9999, 'options' => array()),
                 'traversable' => array('priority' => -8888, 'options' => array()),
                 'datetime' => array('priority' => -8888, 'options' => array('format' => false)),
-                'object' => array('priority' => -9999, 'options' => array())
+                'object' => array('priority' => -9999, 'options' => array('parents' => false))
             )
         );
         $modifiedConfig = $defaultConfig;
